@@ -1,0 +1,15 @@
+version: '2'
+services:
+    question_board-app:
+        image: question_board
+        environment:
+            # - _JAVA_OPTIONS=-Xmx512m -Xms256m
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - SPRING_DATASOURCE_URL=jdbc:mysql://question_board-mysql:3306/question_board?useUnicode=true&characterEncoding=utf8&useSSL=false
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        ports:
+            - 8080:8080
+    question_board-mysql:
+        extends:
+            file: mysql.yml
+            service: question_board-mysql

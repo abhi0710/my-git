@@ -1,0 +1,15 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package com.gaian.grpc;
+
+message GetChunkRequest {
+    string filePath = 1;
+}
+
+message GetChunkResponse {
+    bytes data = 1;
+}
+
+service GetChunkService {
+    rpc getChunk(GetChunkRequest) returns (GetChunkResponse);
+}

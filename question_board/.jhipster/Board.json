@@ -1,0 +1,33 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipName": "question",
+            "otherEntityName": "question",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "board"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "active",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldName": "createdOn",
+            "fieldType": "ZonedDateTime"
+        }
+    ],
+    "changelogDate": "20181010101126",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "board",
+    "jpaMetamodelFiltering": false,
+    "pagination": "infinite-scroll"
+}

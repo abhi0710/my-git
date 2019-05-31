@@ -1,0 +1,15 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package com.gaian.grpc;
+
+message GetMetaDataRequest {
+    string filePath = 1;
+}
+
+message GetMetaDataResponse {
+    repeated string files = 1;
+}
+
+service GetMetaDataService {
+    rpc getMetaData(GetMetaDataRequest) returns (GetMetaDataResponse);
+}
