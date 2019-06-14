@@ -1,5 +1,7 @@
 package com.abhi0710.rsocket.plain.client;
 
+import com.abhi0710.rsocket.plain.request.FileRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import io.rsocket.RSocketFactory;
@@ -16,47 +18,71 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
+
+//-Dreactor.netty.ioWorkerCount=200 -Dreactor.netty.ioSelectCount=32
 public class RSocketClient {
 
-    static RSocket socket;
+
+
+//    static RSocket socket;
 
     public static void main(String[] args) {
-        socket = RSocketFactory.connect()
-                .frameDecoder(PayloadDecoder.ZERO_COPY)
-                .transport(TcpClientTransport.create("localhost", 5000))
-                .start()
-                .block();
+//        socket = RSocketFactory.connect()
+//                .frameDecoder(PayloadDecoder.ZERO_COPY)
+//                .transport(TcpClientTransport.create("localhost", 5000))
+//                .start()
+//                .block();
 
 
-        ExecutorService service = Executors.newFixedThreadPool(300  );
+
+        ExecutorService service = Executors.newFixedThreadPool(8  );
         List<Callable<Integer>> list = new ArrayList<>();
 
-        Instant start = Instant.now();
 
-        for (int i = 0 ; i < 700 ; i++ ) {
+        for (int i = 0 ; i < 500 ; i++ ) {
 
             final int integer = i;
+
+
 
             list.add(new Callable<Integer>() {
                 public Integer call() {
 
                     try {
+
+                        final RSocket socket = RSocketFactory.connect()
+                                .keepAliveAckTimeout(Duration.ofSeconds(100))
+                                .frameDecoder(PayloadDecoder.ZERO_COPY)
+                                .transport(TcpClientTransport.create("localhost", 80))
+                                .start()
+                                .block();
+
+
                         File file = new File("/home/gaian/uploads/split6/temp/" + integer + ".pdf");
                         file.createNewFile();
 
                         FileChannel channel = new RandomAccessFile(file, "rw")
                                 .getChannel();
 
-                        Payload payload = socket.requestResponse(DefaultPayload.create("Hello")).block();
+                        FileRequest request = new FileRequest("a", "b");
+
+                        Payload requestPayload = DefaultPayload.create(new ObjectMapper().writeValueAsString(request), "getFileList");
+
+                        Payload payload = socket.requestResponse(requestPayload).block();
 
                         channel.write(payload.getData());
                         payload.release();
-                        channel.close();
+//                        channel.close();
+
+//                        Thread.sleep(10000);
+
+
+                        System.out.println("finished " + integer);
+
+                                                socket.dispose();
+
 
                         return 1;
 
@@ -70,6 +96,9 @@ public class RSocketClient {
             });
 
         }
+
+        Instant start = Instant.now();
+
 
         try {
             service.invokeAll(list);
