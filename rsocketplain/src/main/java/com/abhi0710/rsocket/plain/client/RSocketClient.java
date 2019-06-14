@@ -66,7 +66,7 @@ public class RSocketClient {
                         FileChannel channel = new RandomAccessFile(file, "rw")
                                 .getChannel();
 
-                        FileRequest request = new FileRequest("a", "b");
+                        FileRequest request = new FileRequest("a", "b", -1);
 
                         Payload requestPayload = DefaultPayload.create(new ObjectMapper().writeValueAsString(request), "getFileList");
 

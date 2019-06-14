@@ -11,10 +11,13 @@ import lombok.Getter;
 public class FileRequest {
     String fileName;
     String priority;
+    int block;
 
     @JsonCreator
-    public FileRequest(@JsonProperty("fileName") String fileName, @JsonProperty("priority") String priority) {
+    public FileRequest(@JsonProperty("fileName") String fileName, @JsonProperty("priority") String priority,
+                       @JsonProperty("block") int block) {
         this.fileName = fileName;
         this.priority = priority;
+        this.block = block;
     }
 }
