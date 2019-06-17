@@ -1,5 +1,8 @@
 package com.gaian.grpc;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
 import static io.grpc.stub.ClientCalls.asyncClientStreamingCall;
@@ -89,7 +92,7 @@ public final class GetChunkServiceGrpc {
     /**
      */
     public void getChunk(com.gaian.grpc.GetChunkRequest request,
-        io.grpc.stub.StreamObserver<com.gaian.grpc.GetChunkResponse> responseObserver) {
+        io.grpc.stub.StreamObserver<com.gaian.grpc.GetChunkResponse> responseObserver)  {
       asyncUnimplementedUnaryCall(getGetChunkMethod(), responseObserver);
     }
 

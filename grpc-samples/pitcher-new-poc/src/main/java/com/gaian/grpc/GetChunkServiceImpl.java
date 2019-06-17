@@ -6,7 +6,12 @@ import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import org.lognet.springboot.grpc.GRpcService;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -20,8 +25,15 @@ import java.nio.file.Paths;
 @Slf4j
 public class GetChunkServiceImpl extends GetChunkServiceGrpc.GetChunkServiceImplBase {
 
-    @Override
-    public void getChunk(GetChunkRequest request, StreamObserver<GetChunkResponse> responseObserver) {
+
+    public void getChunk(GetChunkRequest request, StreamObserver<GetChunkResponse> responseObserver)
+    {
+        if (request.getFilePath().contains("6"))
+            getChunkOld(request, responseObserver);
+        else
+            getChunkNew(request, responseObserver);
+    }
+    public void getChunkOld(GetChunkRequest request, StreamObserver<GetChunkResponse> responseObserver) {
 
         String filePath = request.getFilePath();
 
@@ -39,6 +51,31 @@ public class GetChunkServiceImpl extends GetChunkServiceGrpc.GetChunkServiceImpl
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+
+    }
+
+
+    public void getChunkNew(GetChunkRequest request, StreamObserver<GetChunkResponse> responseObserver) {
+
+        String filePath = request.getFilePath();
+
+        RandomAccessFile aFile     = null;
+        try {
+            aFile = new RandomAccessFile(request.getFilePath(), "r");
+
+        FileChannel channel = aFile.getChannel();
+        MappedByteBuffer buffer =        channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+
+        log.info("Given File Path : {}",filePath);
+
+        GetChunkResponse response = GetChunkResponse.newBuilder().
+                setData(ByteString.copyFrom(buffer)).build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

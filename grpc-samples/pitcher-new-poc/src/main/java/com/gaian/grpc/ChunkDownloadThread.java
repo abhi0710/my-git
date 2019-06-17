@@ -31,7 +31,7 @@ public class ChunkDownloadThread implements Callable {
     @Override
     public Object call() throws Exception {
 
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("192.168.25.167", 6565)
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 6565)
                 .usePlaintext()
                 .maxInboundMessageSize(1073741824)
                 .build();

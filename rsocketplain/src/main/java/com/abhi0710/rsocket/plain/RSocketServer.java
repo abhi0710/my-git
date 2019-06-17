@@ -18,10 +18,10 @@ public class RSocketServer {
                 .frameDecoder(PayloadDecoder.ZERO_COPY)
                 .acceptor((setupPayload, reactiveSocket) -> Mono.just(new RSocketImpl()))
                 .transport(
-                        TcpServerTransport.create(TcpServer.create().port(5001).host("localhost").
+                        TcpServerTransport.create(TcpServer.create().port(5000).host("localhost").
                                 option(ChannelOption.AUTO_CLOSE, true)
                                 .option(ChannelOption.SO_BACKLOG,500)
-                        .option(ChannelOption.SO_TIMEOUT,1))
+                        .option(ChannelOption.SO_TIMEOUT,10000))
                 )
                 .start()
                 .block();

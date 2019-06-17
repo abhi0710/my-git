@@ -20,15 +20,15 @@ public class GetMetaDataServiceClient {
     public static void main(String[] args) {
 
 
-        ExecutorService executorService = Executors.newFixedThreadPool(200);
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
 
         List<Callable<Object>> downloadThreadList=new ArrayList<>();
 
         Instant start = Instant.now();
 
 
-        for (int index = 1; index <= 100; index++) {
-            downloadThreadList.add(new ChunkDownloadThread("/split6", "/home/gaian/uploads/converted" + index + "/"));
+        for (int index = 1; index <= 1; index++) {
+            downloadThreadList.add(new ChunkDownloadThread("/split6 ", "/home/gaian/uploads/converted" + index + "/"));
         }
 
         try {
@@ -43,7 +43,7 @@ public class GetMetaDataServiceClient {
 
         long minutes = TimeUnit.MILLISECONDS.toSeconds(timeElapsed);
 
-        System.out.println("total time elapsed = " + minutes);
+        System.out.println("total time elapsed = " + minutes + " " + timeElapsed);
 
         executorService.shutdown();
 
